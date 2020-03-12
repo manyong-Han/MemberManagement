@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:background="#5CA5B2"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:text="Member Management"
+                android:textColor="#ffffff"
+                android:textSize="30dp"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/id"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:background="#5CA5B2"
+                android:drawableStart="@drawable/ic_person_black_24dp"
+                android:drawableLeft="@drawable/ic_person_black_24dp"
+                android:hint="Insert ID"
+                android:padding="10dp"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:textColor="#ffffff"
+                android:textColorHint="#ffffff" />
+
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="#5CA5B2"
+                android:drawableStart="@drawable/ic_no_encryption_black_24dp"
+                android:drawableLeft="@drawable/ic_no_encryption_black_24dp"
+                android:hint="Insert Password"
+                android:inputType="textPassword"
+                android:padding="10dp"
+                android:textColor="#ffffffff"
+                android:textColorHint="#ffffff" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+
+                <CheckBox
+                    android:id="@+id/check_auto_login"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="자동로그인" />
+
+                <CheckBox
+                    android:id="@+id/check_save_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="아이디 저장" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/login"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:background="#5CA5B2"
+                android:text="로그인"
+                android:textColor="#ffffff"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/login_join"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:background="#5CA5B2"
+                android:text="회원가입"
+                android:textColor="#ffffff"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>
