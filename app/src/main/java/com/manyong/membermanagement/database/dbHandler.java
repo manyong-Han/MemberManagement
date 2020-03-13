@@ -58,7 +58,7 @@ public class dbHandler {
     }
 
     public void member_insert(String id, String password, String name, String birthday,
-                              String phone, String classes) {
+                              String phone, String classes, String reg_date) {
 
         Log.d(TAG, "member_insert");
 
@@ -71,11 +71,12 @@ public class dbHandler {
         value.put("birthday", birthday);
         value.put("phone", phone);
         value.put("classes", classes);
+        value.put("reg_date", reg_date);
 
         mDB.insert("member", null, value);
     }
 
-    public void member_update(String id, String name, String birthday, String phone, String classes) {
+    public void member_update(String id) {
         Log.d(TAG, "member_update");
 
         mDB = mHelper.getWritableDatabase();
@@ -83,10 +84,7 @@ public class dbHandler {
         String id_array[] = {id};
 
         ContentValues value = new ContentValues();
-        value.put("name", name);
-        value.put("birthday", birthday);
-        value.put("phone", phone);
-        value.put("classes", classes);
+        value.put("classes", "관리자");
 
         mDB.update("member", value, "id = ?", id_array);
     }

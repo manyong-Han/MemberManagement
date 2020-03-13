@@ -1,7 +1,6 @@
 package com.manyong.membermanagement.login;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.os.Build;
@@ -19,6 +18,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.manyong.membermanagement.R;
 import com.manyong.membermanagement.database.dbHandler;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by hanman-yong on 2020-01-07.
@@ -203,6 +207,10 @@ public class JoinActivity extends AppCompatActivity {
             insert_classes = "관리자";
         }
 
+        // 회원 가입 날짜 불러오기
+        Date currentTime = Calendar.getInstance().getTime();
+        String insert_reg_date = new SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault()).format(currentTime);
+
         if (this.count != 1) {
             Toast.makeText(getApplicationContext(), "아이디 중복 확인 해주세요.", Toast.LENGTH_SHORT).show();
             this.count = 0;
@@ -218,7 +226,7 @@ public class JoinActivity extends AppCompatActivity {
 
         } else if (insert_password.equals(insert_password2) && this.count >= 1) {
 
-            handler.member_insert(insert_id, insert_password, insert_name, insert_birthday, insert_phone, insert_classes);
+            handler.member_insert(insert_id, insert_password, insert_name, insert_birthday, insert_phone, insert_classes, insert_reg_date);
 
             Toast.makeText(getApplicationContext(), "회원가입 완료", Toast.LENGTH_SHORT).show();
 
