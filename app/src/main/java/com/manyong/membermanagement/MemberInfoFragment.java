@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -39,20 +40,23 @@ public class MemberInfoFragment extends Fragment {
 
     private final String TAG = "Member Info";
 
-    private EditText id, name, password, phone, birthday;
+    private EditText id, name, password, phone, birthday, pw, pw_check;
     private ImageView profile_image;
-    private String mCurrentPhotoPath, my_id;
+    private Button btn_update, btn_pw_change;
+    private String mCurrentPhotoPath, my_id, id_str, pw_str;
 
     private File tempFile;
 
     private dbHandler handler;
 
     private Cursor member_cursor = null;
+    private LayoutInflater inflater;
 
     public MemberInfoFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        this.inflater = inflater;
         View view = inflater.inflate(R.layout.fragment_member_info, container, false);
 
         if (handler == null) {
@@ -69,6 +73,9 @@ public class MemberInfoFragment extends Fragment {
         birthday = (EditText) view.findViewById(R.id.my_page_birthday);
 
         profile_image = (ImageView) view.findViewById(R.id.my_page_profile_image);
+
+        btn_update = (Button) view.findViewById(R.id.my_page_update);
+        btn_pw_change = (Button) view.findViewById(R.id.my_page_pw_change);
 
         MyInfo();
 
@@ -102,6 +109,32 @@ public class MemberInfoFragment extends Fragment {
                 });
 
                 alertBuilder.show();
+            }
+        });
+
+        btn_update.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (password.getText().toString().equals("")) {
+                    Toast.makeText(getActivity(), "비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                onUpdate();
+
+                MyInfo();
+
+                password.setText("");
+            }
+        });
+
+        btn_pw_change.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (password.getText().toString().equals("")) {
+                    Toast.makeText(getActivity(), "비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                onPWChange();
             }
         });
 
@@ -277,5 +310,91 @@ public class MemberInfoFragment extends Fragment {
         Uri image = Uri.parse(mCurrentPhotoPath);
         profile_image.setImageURI(image);
         mCurrentPhotoPath = null;
+    }
+
+    private void onUpdate() {
+        id_str = id.getText().toString();
+        pw_str = password.getText().toString();
+
+        String name_str = name.getText().toString();
+        String phone_str = phone.getText().toString();
+        String birthday_str = birthday.getText().toString();
+
+        member_cursor = handler.member_select_one(id_str);
+
+        String ck_pw = member_cursor.getString(member_cursor.getColumnIndex("password"));
+
+        if (pw_str.equals(ck_pw) == false) {
+            Toast.makeText(getActivity(), "비밀번호가 틀렸습니다.", Toast.LENGTH_SHORT).show();
+            password.setText("");
+            return;
+        }
+
+        handler.member_update(id_str, name_str, phone_str, birthday_str);
+
+        Toast.makeText(getActivity(), "회원정보 수정 완료.", Toast.LENGTH_SHORT).show();
+
+        password.setText("");
+
+        member_cursor.close();
+
+    }
+
+    // 비밀번호 변경을 위한 다이얼로그 생성
+    public void onPWChange() {
+        id_str = id.getText().toString();
+        pw_str = password.getText().toString();
+
+        member_cursor = handler.member_select_one(id_str);
+
+        String ck_pw = member_cursor.getString(member_cursor.getColumnIndex("password"));
+
+        if (pw_str.equals(ck_pw) == false) {
+            Toast.makeText(getActivity(), "비밀번호가 틀렸습니다.", Toast.LENGTH_SHORT).show();
+            password.setText("");
+            return;
+        }
+
+        // 레이아웃 XML파일을 View객체로 만들기 위해 inflater 사용
+        View view = inflater.inflate(R.layout.fragment_pwd_change, null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        pw = (EditText) view.findViewById(R.id.my_page_pw);
+        pw_check = (EditText) view.findViewById(R.id.my_page_pw_check);
+
+        builder.setTitle("변경할 비밀번호를 입력해 주세요.")
+                .setView(view)
+                .setPositiveButton("변경하기", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        String str_pw = pw.getText().toString();
+                        String str_pw_check = pw_check.getText().toString();
+
+                        if (str_pw.equals(str_pw_check)) {
+                            handler.member_pw_update(id_str, str_pw);
+                            Toast.makeText(getActivity(), "비밀번호 수정 완료.", Toast.LENGTH_SHORT).show();
+
+                        } else {
+                            Toast.makeText(getActivity(), "비밀번호가 일치하지 않습니다. 다시 시도해주세요. ", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                            onPWChange();
+                        }
+
+                        password.setText("");
+
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton("취소하기", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getActivity(), "취소.", Toast.LENGTH_SHORT).show();
+                        dialog.cancel();
+                    }
+                }).show();
+
+        member_cursor.close();
     }
 }

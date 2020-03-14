@@ -2,17 +2,12 @@ package com.manyong.membermanagement;
 
 import android.Manifest;
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Log;
-import android.widget.Toast;
+import android.view.Menu;
+import android.view.MenuItem;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
@@ -21,8 +16,9 @@ import com.gun0912.tedpermission.TedPermission;
 import com.manyong.membermanagement.adapter.MemberPagerAdapter;
 import com.manyong.membermanagement.database.dbHandler;
 import com.manyong.membermanagement.event.ActivityResultEvent;
+import com.manyong.membermanagement.login.LoginActivity;
 import com.manyong.membermanagement.util.BusProvider;
-import com.squareup.otto.Subscribe;
+import com.manyong.membermanagement.util.LoginSharedPreference;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -75,14 +71,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPermissionGranted() {
                 // 권한 요청 성공
-                //isPermission = true;
-
             }
 
             @Override
             public void onPermissionDenied(ArrayList<String> deniedPermissions) {
                 // 권한 요청 실패
-                //isPermission = false;
             }
         };
 
@@ -99,5 +92,28 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         BusProvider.getInstance().post(new ActivityResultEvent(requestCode, resultCode, data));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.menu_logout:
+                LoginSharedPreference.removeAttribute(MainActivity.this, LoginActivity.LOGIN_ID);
+                LoginSharedPreference.removeAttribute(MainActivity.this, LoginActivity.AUTO_ID);
+
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

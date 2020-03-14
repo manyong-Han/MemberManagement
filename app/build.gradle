@@ -35,4 +35,6 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation "gun0912.ted:tedpermission:2.1.0"
     implementation 'com.squareup:otto:1.3.8'
+    // 스와이프 리프레쉬를 위한 라이브러리
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
 }

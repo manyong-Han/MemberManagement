@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
@@ -15,11 +16,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.manyong.membermanagement.adapter.MemberListAdapter;
 import com.manyong.membermanagement.database.dbHandler;
 import com.manyong.membermanagement.item.MemberItem;
+import com.manyong.membermanagement.login.LoginActivity;
 import com.manyong.membermanagement.util.BusProvider;
+import com.manyong.membermanagement.util.LoginSharedPreference;
 
 import java.util.ArrayList;
 
@@ -27,6 +31,8 @@ public class MemberListFragment extends Fragment {
     private final String TAG = "MemberListFragment";
 
     private RecyclerView member_rcvView;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private TextView admin_text;
 
     private Cursor cursor;
 
@@ -44,21 +50,31 @@ public class MemberListFragment extends Fragment {
             handler = dbHandler.open(getContext());
         }
 
+        admin_text = (TextView) view.findViewById(R.id.admin_text);
         member_rcvView = (RecyclerView) view.findViewById(R.id.act_rcv_member_list);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         member_rcvView.setLayoutManager(linearLayoutManager);
         member_rcvView.addItemDecoration(new DividerItemDecoration(view.getContext(), 1));
 
+        if(admin_check()){
+           admin_text.setVisibility(View.GONE);
+        } else {
+            member_rcvView.setVisibility(View.GONE);
+        }
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                memberList();
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
         memberList();
 
         return view;
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        memberList();
     }
 
     public void memberList() {
@@ -81,6 +97,9 @@ public class MemberListFragment extends Fragment {
 
                 loadMemberList(idx, str_id, str_password, str_name, str_birth_day, str_phone, str_classes, str_reg_date, str_profile_image);
             }
+
+            cursor.close();
+
         } catch (Exception e) {
             e.printStackTrace();
             Log.e(TAG, "ListFrag - 회원목록 로딩중 오류발생\n" + e.getMessage());
@@ -103,5 +122,19 @@ public class MemberListFragment extends Fragment {
         member_list.add(myItem);
 
         member_rcvView.setAdapter(new MemberListAdapter(getActivity(), member_list));
+    }
+
+    public boolean admin_check(){
+        String my_id = LoginSharedPreference.getAttribute(getContext(), LoginActivity.LOGIN_ID);
+
+        cursor = handler.member_select_one(my_id);
+        String str_classes = cursor.getString(cursor.getColumnIndex("classes"));
+        cursor.close();
+
+        if(str_classes.equals("관리자")){
+            return true;
+        } else {
+            return false;
+        }
     }
 }

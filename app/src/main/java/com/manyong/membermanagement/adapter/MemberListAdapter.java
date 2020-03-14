@@ -1,7 +1,6 @@
 package com.manyong.membermanagement.adapter;
 
 import android.app.Activity;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
@@ -70,7 +69,7 @@ public class MemberListAdapter extends RecyclerView.Adapter<MemberListAdapter.Vi
                         @Override
                         public void handleMessage(Message msg) {
                             if (msg.what == 1) {//Yes
-                                dbhandler.member_update(dataList.get(getAdapterPosition()).getId());
+                                dbhandler.member_classes_update(dataList.get(getAdapterPosition()).getId());
                             }
                         }
                     };

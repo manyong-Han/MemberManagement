@@ -54,6 +54,7 @@ public class dbHandler {
 
         String sql_query = "SELECT * FROM " + TABLE_NAME;
         Cursor c = mDB.rawQuery(sql_query, null);
+        //c.moveToFirst();
 
         return c;
     }
@@ -88,7 +89,20 @@ public class dbHandler {
         mDB.update(TABLE_NAME, value, "id = ?", id_array);
     }
 
-    public void member_update(String id) {
+    public void member_update(String id, String name, String phone, String birthday){
+        mDB = mHelper.getWritableDatabase();
+
+        String id_array[] = {id};
+
+        ContentValues value = new ContentValues();
+        value.put("name", name);
+        value.put("phone", phone);
+        value.put("birthday", birthday);
+
+        mDB.update(TABLE_NAME, value, "id = ?", id_array);
+    }
+
+    public void member_classes_update(String id) {
         Log.d(TAG, "member_update");
 
         mDB = mHelper.getWritableDatabase();
