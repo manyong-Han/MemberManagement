@@ -14,10 +14,10 @@
         android:background="#5CA5B2">
 
         <ImageView
+            android:id="@+id/my_page_profile_image"
             android:layout_width="match_parent"
             android:layout_height="130dp"
             android:src="@drawable/user"
-
             />
 
         <LinearLayout
@@ -107,7 +107,7 @@
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/my_page_tel"
+                android:id="@+id/my_page_phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -124,13 +124,13 @@
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="이메일 : "
+                android:text="생년월일 : "
                 android:textColor="#000000"
                 android:textSize="30dp"
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/my_page_e_mail"
+                android:id="@+id/my_page_birthday"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

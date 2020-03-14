@@ -13,6 +13,7 @@ import android.util.Log;
  */
 public class dbHandler {
     private final String TAG = "dbHandler";
+    private final String TABLE_NAME = "member";
 
     SQLiteOpenHelper mHelper = null;
     SQLiteDatabase mDB = null;
@@ -29,7 +30,7 @@ public class dbHandler {
     public Cursor member_select_one(String id) {
         mDB = mHelper.getReadableDatabase();
 
-        String sql_query = "SELECT * FROM member WHERE id ='" + id + "'";
+        String sql_query = "SELECT * FROM " + TABLE_NAME + " WHERE id ='" + id + "'";
         Cursor c = mDB.rawQuery(sql_query, null);
 
         c.moveToFirst();
@@ -40,7 +41,7 @@ public class dbHandler {
     public Cursor member_select_image(String id) {
         mDB = mHelper.getReadableDatabase();
 
-        String sql_query = "SELECT profile_image FROM member WHERE id ='" + id + "'";
+        String sql_query = "SELECT profile_image FROM " + TABLE_NAME + " WHERE id ='" + id + "'";
         Cursor c = mDB.rawQuery(sql_query, null);
 
         c.moveToFirst();
@@ -51,7 +52,7 @@ public class dbHandler {
     public Cursor member_select() {
         mDB = mHelper.getReadableDatabase();
 
-        String sql_query = "SELECT * FROM member";
+        String sql_query = "SELECT * FROM " + TABLE_NAME;
         Cursor c = mDB.rawQuery(sql_query, null);
 
         return c;
@@ -73,7 +74,18 @@ public class dbHandler {
         value.put("classes", classes);
         value.put("reg_date", reg_date);
 
-        mDB.insert("member", null, value);
+        mDB.insert(TABLE_NAME, null, value);
+    }
+
+    public void member_profile_update(String id, String profile_image) {
+        mDB = mHelper.getWritableDatabase();
+
+        String id_array[] = {id};
+
+        ContentValues value = new ContentValues();
+        value.put("profile_image", profile_image);
+
+        mDB.update(TABLE_NAME, value, "id = ?", id_array);
     }
 
     public void member_update(String id) {
@@ -86,7 +98,7 @@ public class dbHandler {
         ContentValues value = new ContentValues();
         value.put("classes", "관리자");
 
-        mDB.update("member", value, "id = ?", id_array);
+        mDB.update(TABLE_NAME, value, "id = ?", id_array);
     }
 
     public void member_pw_update(String id, String password) {
@@ -99,7 +111,7 @@ public class dbHandler {
         ContentValues value = new ContentValues();
         value.put("password", password);
 
-        mDB.update("member", value, "id = ?", id_array);
+        mDB.update(TABLE_NAME, value, "id = ?", id_array);
     }
 
     public void member_delete(String id) {
@@ -107,7 +119,7 @@ public class dbHandler {
 
         mDB = mHelper.getWritableDatabase();
 
-        mDB.delete("member", "id=?", new String[]{id});
+        mDB.delete(TABLE_NAME, "id=?", new String[]{id});
     }
 
     public void close() {

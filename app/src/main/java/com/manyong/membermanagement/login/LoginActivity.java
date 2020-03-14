@@ -57,6 +57,14 @@ public class LoginActivity extends AppCompatActivity {
             handler = dbHandler.open(this);
         }
 
+        if (LoginSharedPreference.getAttribute(getApplication(), LoginActivity.AUTO_ID).length() != 0) {
+            showProgress("로그인중...");
+            Toast.makeText(LoginActivity.this, LoginSharedPreference.getAttribute(getApplication(), LoginActivity.LOGIN_ID) + "님 환영합니다.", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
         id = (EditText) findViewById(R.id.id);
         password = (EditText) findViewById(R.id.password);
 

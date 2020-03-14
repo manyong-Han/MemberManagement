@@ -1,11 +1,14 @@
 package com.manyong.membermanagement;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +19,7 @@ import android.view.ViewGroup;
 import com.manyong.membermanagement.adapter.MemberListAdapter;
 import com.manyong.membermanagement.database.dbHandler;
 import com.manyong.membermanagement.item.MemberItem;
+import com.manyong.membermanagement.util.BusProvider;
 
 import java.util.ArrayList;
 
@@ -49,6 +53,12 @@ public class MemberListFragment extends Fragment {
         memberList();
 
         return view;
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        memberList();
     }
 
     public void memberList() {
